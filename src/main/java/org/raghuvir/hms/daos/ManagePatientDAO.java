@@ -10,9 +10,7 @@ import org.raghuvir.hms.dtos.PatientInfoDTO;
 
 public interface ManagePatientDAO {
 
-    List<PatientBEAN> serchPatient(String query);
-    
-    List<PatientBEAN> getPatientList(int pageno);
+    List<PatientBEAN> serchPatient(String query,int start,int size);    
 
     Set<HmsUserBEAN> getPatientListForDoctor(String did);
 

@@ -12,23 +12,6 @@
 <title>View Patient Information</title>
 
 <script>
-	function clear() {
-		document.getElementById("table").style.display = "none";
-		document.getElementById("complaint").style.display = "none";
-		document.getElementById("rooms").style.display = "none";
-	}
-	function makeComplaint() {
-		clear();
-		document.getElementById("complaint").style.display = "";
-	}
-	function makeDefault() {
-		clear();
-		document.getElementById("table").style.display = "";
-	}
-	function allocateRoom() {
-		clear();
-		document.getElementById("rooms").style.display = "";
-	}
 	function doMagic() {
 		var value = document.getElementById("typeofroom").value;
 		document.getElementById("vip").style.display = "none";
@@ -50,10 +33,21 @@
 	<jsp:include page="__ViewPatientInfo/links.jsp"></jsp:include>
 	<jsp:include page="__ViewPatientInfo/patientInfo.jsp"></jsp:include>
 
-	<div class="container">
-		<jsp:include page="__ViewPatientInfo/chiefcomplaintslist.jsp"></jsp:include>
-		<jsp:include page="__ViewPatientInfo/addChiefComplaint.jsp"></jsp:include>
-		<jsp:include page="__ViewPatientInfo/allocateRoom.jsp"></jsp:include>		
+	<div class="container" id="parent">
+		<button class="btn btn-primary" role="button" data-toggle="collapse"
+			data-target="#chiefcomplaintlist" aria-expanded="false"
+			aria-controls="chiefcomplaintlist">my chief complaints</button>
+		<button class="btn btn-primary" type="button" data-toggle="collapse"
+			data-target="#displayrooms" aria-expanded="false"
+			aria-controls="displayrooms">my rooms</button>
+		<button class="btn btn-primary" type="button" data-toggle="collapse"
+			data-target="#newComplaint" aria-expanded="false"
+			aria-controls="newComplaint">new chief complaint</button>
+		<div class="accordion-group">
+			<jsp:include page="__ViewPatientInfo/chiefcomplaintslist.jsp"></jsp:include>
+			<jsp:include page="__ViewPatientInfo/addChiefComplaint.jsp"></jsp:include>
+			<jsp:include page="__ViewPatientInfo/allocateRoom.jsp"></jsp:include>
+		</div>
 	</div>
 </body>
 </html>

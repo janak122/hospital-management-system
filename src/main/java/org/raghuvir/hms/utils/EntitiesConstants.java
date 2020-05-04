@@ -10,9 +10,7 @@ public final class EntitiesConstants {
 	public static final String VIP = "VIP", REGULAR = "REGULAR", GENERAL = "GENERAL", DOCTOR = "DOCTOR",
 			STAFF = "STAFF", RECEPTIONIST = "RECEPTIONIST", ADMIN = "ADMIN", PATIENT = "PATIENT", ROOM = "ROOM",
 			HMSUSER = "HMSUSER";
-	
-	public static final String DEFAULT_IMAGE = "default.png",sep=File.separator,
-			UPLOAD_DIRECTORY ="resources"+sep+"images";
+
 
 	public static final String PATIENT_PREFIX = "P", DOCTOR_PREFIX = "D", STAFF_PREFIX = "S", ADMIN_PREFIX = "ADMIN";
 	public static final String PENDING = "PENDING", CHECKED = "CHECKED", CONFIRMED = "CONFIRMED",

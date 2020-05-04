@@ -7,6 +7,7 @@
 		<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
 		<property name="hibernate.connection.username">ram</property>
 		<property name="hibernate.connection.password">ram</property>
+		<property name="hibernate.show_sql">true</property>
 		<!--property name="hibernate.jdbc.time_zone" value="UTC"/ -->
 
 		<property name="hibernate.search.default.directory_provider">filesystem</property>

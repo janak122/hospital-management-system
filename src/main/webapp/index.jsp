@@ -9,31 +9,42 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <title>Material Design for Bootstrap</title>
 <script>
-	function myFunction() {
-		// Declare variables
-		var input, filter, table, tr, td, i, txtValue;
-		input = document.getElementById("myInput");
-		filter = input.value.toUpperCase();
-		table = document.getElementById("myTable");
-		tr = table.getElementsByTagName("tr");
-
-		for (var i = 0; i < tr.length; i++) {
-			var value = "none";
-			for (var j = 0; j < table.rows[i].cells.length; j++) {
-				txtValue = table.rows[i].cells[j].innerHTML;
-				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					value = "";
-				}
-			}
-			tr[i].style.display = value;
-		}
-	}
+	var $myGroup = $('#myGroup');
+	$myGroup.on('show', '.collapse', function() {
+		$myGroup.find('.collapse.in').collapse('hide');
+	});
 </script>
+<style type="text/css">
+</style>
 </head>
 <body>
 
 	<jsp:include page="links.jsp"></jsp:include>
-	<c:out value="${pageContext.servletContext.contextPath}" />
+	<div id="myGroup">
+		<button class="btn dropdown" data-toggle="collapse"
+			data-target="#keys">
+			<i class="icon-chevron-right"></i> Keys <span
+				class="badge badge-info pull-right">X</span>
+		</button>
+		<button class="btn dropdown" data-toggle="collapse"
+			data-target="#attrs">
+			<i class="icon-chevron-right"></i> Attributes
+		</button>
+		<button class="btn dropdown" data-toggle="collapse"
+			data-target="#edit">
+			<i class="icon-chevron-right"></i> Edit Details
+		</button>
+
+		<div class="accordion-group">
+			<div class="collapse indent" id="keys" data-parent="#myGroup">
+				keys</div>
+
+			<div class="collapse indent" id="attrs" data-parent="#myGroup">
+				attrs</div>
+
+			<div class="collapse" id="edit" data-parent="#myGroup">edit</div>
+		</div>
+	</div>
 	<!-- jQuery -->
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<!-- Bootstrap tooltips -->
@@ -44,6 +55,5 @@
 	<script type="text/javascript" src="js/mdb.min.js"></script>
 	<!-- Your custom scripts (optional) -->
 	<script type="text/javascript"></script>
-
 </body>
 </html>

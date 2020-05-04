@@ -15,5 +15,9 @@ public interface GeneralService {
 
     List getList(Class clazz, int start, int size, Criterion...criterions);
     
-	 String uploadFile(String dirpath,String userId, MultipartFile file);
+	 String uploadFile(String userId, MultipartFile file);
+	 
+	 String getValidFilename(String fnm);
+	 
+	 public List<Integer> getListForPageBar(int currpage,int totalpages,int MAX_PAGEBAR);
 }

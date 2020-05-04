@@ -7,12 +7,14 @@ import org.raghuvir.hms.beans.HmsUserBEAN;
 import org.raghuvir.hms.beans.PatientBEAN;
 import org.raghuvir.hms.dtos.ChiefComplaintDTO;
 import org.raghuvir.hms.dtos.PatientInfoDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ManagePatientService {
 
-    List<PatientBEAN> serchPatient(String query);
+    List<PatientBEAN> serchPatient(String query,Pageable pageable);
     
-    List<PatientBEAN> getPatientList(int pageno);
+    Page<PatientBEAN> getPatientList(Pageable pageable);
 
     Set<HmsUserBEAN> getPatientListForDoctor(String did);
 
@@ -20,7 +22,7 @@ public interface ManagePatientService {
     
     PatientInfoDTO getPatientInfo(String pid);
     
-    Set<String> getDoctorIds();
+    List<String> getDoctorIds();
     
     long getTotalPatients();
 

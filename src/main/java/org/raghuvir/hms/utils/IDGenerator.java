@@ -40,7 +40,7 @@ public class IDGenerator {
          return System.currentTimeMillis();
     }
     
-    private synchronized String convertBase36(long num) {
+    public synchronized String convertBase36(long num) {
         String num36 = "";
         while (num != 0) {
             long temp = num % 36;

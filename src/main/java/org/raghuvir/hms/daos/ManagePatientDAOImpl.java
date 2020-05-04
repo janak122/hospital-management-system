@@ -15,7 +15,6 @@ import org.hibernate.search.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.raghuvir.hms.beans.*;
 import org.raghuvir.hms.dtos.ChiefComplaintDTO;
-import org.raghuvir.hms.dtos.PaginationDTO;
 import org.raghuvir.hms.dtos.PatientInfoDTO;
 import org.raghuvir.hms.utils.EntitiesConstants;
 import org.raghuvir.hms.utils.IDGenerator;
@@ -37,17 +36,6 @@ public class ManagePatientDAOImpl implements ManagePatientDAO {
 			ManagePatientDAOImpl.instance = new ManagePatientDAOImpl();
 		}
 		return instance;
-	}
-
-	@Override
-	public synchronized List<PatientBEAN> getPatientList(int pageno) {
-		
-		return (List<PatientBEAN>) HibernateTemplet.executeTemplate(factory, (Session session) -> {
-			return session.createCriteria(PatientBEAN.class)
-					.setFirstResult(PaginationDTO.getStart(pageno))
-					.setMaxResults(PaginationDTO.PAGESIZE)
-					.addOrder(Order.asc("birthdate")).list();
-		});
 	}
 
 	@Override
@@ -90,11 +78,11 @@ public class ManagePatientDAOImpl implements ManagePatientDAO {
 				entries.add((new RoomEntryDTO()).copy(entry));
 			});
 			return new PatientInfoDTO((new HmsUserBEAN()).copy(obj)
-					,complaints
+					,complaints,entries
 					,instance.getAvailableRoomList("vip")
 					,instance.getAvailableRoomList("regular")
 					,instance.getAvailableRoomList("general")
-					,entries);
+					);
 		});
 	}
 
@@ -127,13 +115,15 @@ public class ManagePatientDAOImpl implements ManagePatientDAO {
 	}
 
 	@Override
-	public List<PatientBEAN> serchPatient(String query) {
+	public List<PatientBEAN> serchPatient(String query,int start,int size) {
 		return (List<PatientBEAN>)HibernateTemplet.executeSearchTemplate(factory,(FullTextSession ftxtsession)-> {
 			QueryBuilder qb = ftxtsession.getSearchFactory().buildQueryBuilder().forEntity(PatientBEAN.class).get();
 			org.apache.lucene.search.Query lucenequery = qb.keyword()
 					.onFields("name","emailaddress","userId","gender")
 					.matching(query).createQuery();
-			org.hibernate.Query hibQuery = ftxtsession.createFullTextQuery(lucenequery, PatientBEAN.class);
+			org.hibernate.Query hibQuery = ftxtsession.createFullTextQuery(lucenequery, PatientBEAN.class)
+					.setFirstResult(start)
+					.setMaxResults(size);
 			List<PatientBEAN> list=hibQuery.list();
 			return list;			
 		});

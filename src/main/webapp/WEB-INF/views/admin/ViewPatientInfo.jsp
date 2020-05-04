@@ -1,6 +1,5 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<jsp:include page="../../../_adminHeader.jsp"/>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -11,16 +10,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>View Patient Information</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap/bootstrap.min.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap/bootstrap-grid.min.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bgcolor.css">
-    </head>
+        </head>
     <body>
-        <div class="container">
-            <ul class="nav">
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/patientlist/1" class="btn btn-info">Back</a></li>
-            </ul>
-        </div>  
+ 	<jsp:include page="../../../links.jsp"></jsp:include>
+	<jsp:include page="adminHeader.jsp"></jsp:include>
         <div class="container">
             <hr>
             <div class="form-group"><p class="text-center"><h3 style="text-align: center">Patient's Information</h3></p></div>

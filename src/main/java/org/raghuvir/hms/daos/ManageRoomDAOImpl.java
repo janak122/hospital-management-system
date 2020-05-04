@@ -10,7 +10,6 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.raghuvir.hms.beans.*;
-import org.raghuvir.hms.dtos.PaginationDTO;
 import org.raghuvir.hms.dtos.RoomInfoDTO;
 import org.raghuvir.hms.dtos.RoomListDTO;
 import org.raghuvir.hms.utils.EntitiesConstants;
@@ -61,22 +60,6 @@ public class ManageRoomDAOImpl implements ManageRoomDAO {
 					(PatientBEAN) session.get(PatientBEAN.class, pid), (RoomBEAN) session.get(RoomBEAN.class, roomno),
 					date));
 			return null;
-		});
-	}
-
-	@Override
-	public synchronized List<RoomListDTO> getRoomList(int pageno) {
-		
-		return (List) HibernateTemplet.executeTemplate(factory, (Session session) -> {
-			List<RoomBEAN> list = session.createCriteria(RoomBEAN.class)
-					.setFirstResult(PaginationDTO.getStart(pageno))
-					.setMaxResults(PaginationDTO.PAGESIZE)
-					.list();
-			List list2 = new LinkedList();
-			list.forEach((r) -> {
-				list2.add(new RoomListDTO(r.getRoomno(), r.getTypeofroom(), r.getRoomentries().size()));
-			});
-			return list2;
 		});
 	}
 

@@ -10,10 +10,9 @@ public interface ManageStaffDAO {
     
     List<StaffBEAN> searchStaff(String query);
     
-    List<StaffBEAN> getStaffList(int pageno);
-    
     StaffInfoDTO getStaffInfo(String sid);
     
     long getTotalStaff() ;
+    
     LoginBEAN getIdPassword(String sid);
 }

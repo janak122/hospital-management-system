@@ -17,7 +17,6 @@ import org.raghuvir.hms.beans.LoginBEAN;
 import org.raghuvir.hms.beans.PatientBEAN;
 import org.raghuvir.hms.beans.RoomBEAN;
 import org.raghuvir.hms.beans.StaffBEAN;
-import org.raghuvir.hms.dtos.PaginationDTO;
 import org.raghuvir.hms.dtos.StaffInfoDTO;
 import org.raghuvir.hms.utils.EntitiesConstants;
 import org.raghuvir.hms.utils.IDGenerator;
@@ -37,16 +36,6 @@ public class ManageStaffDAOImpl implements ManageStaffDAO {
         	ManageStaffDAOImpl.instance=new ManageStaffDAOImpl();
         }
         return ManageStaffDAOImpl.instance;
-    }
-
-    public synchronized List<StaffBEAN> getStaffList(int pageno) {
-        return (List<StaffBEAN>) HibernateTemplet.executeTemplate(factory, (Session session) -> {
-            return session.createCriteria(StaffBEAN.class)
-                    .setFirstResult(PaginationDTO.getStart(pageno))
-                    .setMaxResults(PaginationDTO.PAGESIZE)
-            		.add(Restrictions.ne("job",EntitiesConstants.DOCTOR).ignoreCase())
-                    .list();
-        });
     }
 
     public synchronized StaffInfoDTO getStaffInfo(String sid) {

@@ -1,12 +1,8 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="card" style="display: none" id="rooms">
-	<ul class="list-group">
-		<li class="list-group-item" style="padding: 6px 16px 6px 20px">
-			<button class="btn btn-warning float-right" id="deactive-allocate"
-				onclick="makeDefault()">cancle</button>
-		</li>
-	</ul>
+
+<div class="card collapse" id="displayrooms" data-parent="#parent">
+	
 	<c:forEach var="entry" items="${entity.entries}">
 		<form
 			action="${pageContext.request.contextPath}/receptionist/deallocateRoom">
@@ -79,5 +75,4 @@
 			</ul>
 		</div>
 	</form>
-
 </div>

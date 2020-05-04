@@ -7,9 +7,7 @@ import org.raghuvir.hms.dtos.DoctorInfoDTO;
 
 public interface ManageDoctorDAO {
     
-    List<DoctorBEAN>searchDoctor(String query);
-    
-    List<DoctorBEAN> getDoctorList(int pageno);
+    List<DoctorBEAN>searchDoctor(String query);   
     
     LoginBEAN getIdPassword(String did) ;
     

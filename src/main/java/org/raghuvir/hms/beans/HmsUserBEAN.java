@@ -68,6 +68,9 @@ public class HmsUserBEAN implements Serializable, Copiable<HmsUserBEAN> {
 	@Temporal(TemporalType.DATE)
 	Date birthdate;
 
+	public HmsUserBEAN(String uid) {
+		this.userId=uid;
+	}
 	public HmsUserBEAN(String userId, String name, String imgurl, String phoneno, String usertype, String address,
 			String gender, String emailaddress, Date birthdate) {
 		this.userId = userId;

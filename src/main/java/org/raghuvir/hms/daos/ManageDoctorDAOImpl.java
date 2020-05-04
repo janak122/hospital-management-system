@@ -14,7 +14,6 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.raghuvir.hms.beans.*;
 import org.raghuvir.hms.dtos.ChiefComplaintDTO;
 import org.raghuvir.hms.dtos.DoctorInfoDTO;
-import org.raghuvir.hms.dtos.PaginationDTO;
 import org.raghuvir.hms.dtos.PatientInfoDTO;
 import org.raghuvir.hms.utils.EntitiesConstants;
 import org.raghuvir.hms.utils.IDGenerator;
@@ -34,17 +33,6 @@ public class ManageDoctorDAOImpl implements ManageDoctorDAO{
     		ManageDoctorDAOImpl.instance=new ManageDoctorDAOImpl();
     	}
         return ManageDoctorDAOImpl.instance;
-    }
-
-    @Override
-    public synchronized List<DoctorBEAN> getDoctorList(int pageno) {
- 
-        return (List<DoctorBEAN>) HibernateTemplet.executeTemplate(factory, (Session session) -> {
-            return session.createCriteria(DoctorBEAN.class)
-                    .setFirstResult(PaginationDTO.getStart(pageno))
-                    .setMaxResults(PaginationDTO.PAGESIZE)
-                    .list();
-        });
     }
 
     @Override

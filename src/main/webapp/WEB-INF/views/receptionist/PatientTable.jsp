@@ -8,13 +8,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>JSP Page</title>
+<style type="text/css">
 
+</style>
 </head>
 <body>
 	<jsp:include page="../../../links.jsp"></jsp:include>
 	<jsp:include page="receptionistHeader.jsp"></jsp:include>
 
-	
+
 	<div class="container">
 		<ul class="nav">
 			<li class="nav-link alert-success"><a
@@ -32,7 +34,7 @@
 				<c:out value="no result found !"></c:out>
 			</c:when>
 			<c:otherwise>
-				<table class="table table-hover" id="myTable">
+				<table class="table table-hover  table-striped" id="myTable">
 					<thead class="thead-light">
 						<tr>
 							<th>PID</th>
@@ -56,6 +58,7 @@
 						</c:forEach>
 					</tbody>
 				</table>
+
 			</c:otherwise>
 		</c:choose>
 	</div>

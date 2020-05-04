@@ -14,9 +14,7 @@ public interface ManageRoomDAO {
 
     void removePatient(String entryid);
 
-    void addPatient(String pid, String roomno, String date1);
-    
-    List<RoomListDTO> getRoomList(int pageno);
+    void addPatient(String pid, String roomno, String date1);    
     
     RoomInfoDTO getRoomInfo(String roomno);
     

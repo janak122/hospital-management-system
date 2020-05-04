@@ -5,13 +5,14 @@ import java.util.Date;
 
 import org.raghuvir.hms.utils.EntitiesConstants;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class RoomListDTO {
 	private final String roomno;
 	private final String typeofroom;
@@ -20,4 +21,6 @@ public class RoomListDTO {
 	public int getAvailable() {
 		return EntitiesConstants.getTotalBEDS(typeofroom) - occupied;
 	}
+
+	
 }

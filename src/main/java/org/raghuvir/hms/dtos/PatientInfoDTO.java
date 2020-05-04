@@ -15,8 +15,9 @@ import lombok.ToString;
 public class PatientInfoDTO {
 	private final HmsUserBEAN user;
 	private final List<ChiefComplaintDTO> complaint;
-	private final List<String> vipRooms,regularRooms,generalRooms;
 	private final List<RoomEntryDTO> entries;
+	private final List<String> vipRooms,regularRooms,generalRooms;
+	
 
 	public int getAge() {
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-mm-dd");

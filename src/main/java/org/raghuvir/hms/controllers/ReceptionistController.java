@@ -11,6 +11,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.ServletContext;
 
@@ -33,7 +36,6 @@ import org.raghuvir.hms.daos.ManageRoomDAOImpl;
 import org.raghuvir.hms.daos.ManageStaffDAO;
 import org.raghuvir.hms.daos.ManageStaffDAOImpl;
 import org.raghuvir.hms.dtos.ChiefComplaintDTO;
-import org.raghuvir.hms.dtos.PaginationDTO;
 import org.raghuvir.hms.dtos.RoomInfoDTO;
 import org.raghuvir.hms.services.GeneralService;
 import org.raghuvir.hms.services.ManageDoctorService;
@@ -43,6 +45,9 @@ import org.raghuvir.hms.services.ManageStaffService;
 import org.raghuvir.hms.utils.EntitiesConstants;
 import org.raghuvir.hms.utils.IDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,8 +56,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
 @RequestMapping("/receptionist")
+@Slf4j
 public class ReceptionistController {
 	@Autowired
 	ServletContext context; 
@@ -66,7 +74,9 @@ public class ReceptionistController {
 	ManageStaffService staffservices;
 	@Autowired
 	GeneralService generalservices;
-
+	final int PAGE_SIZE=5;
+	final int PATIENT_PAGE_SIZE=30;
+	final int MAX_PAGEBAR=10;
 	/**
 	 *
 	 * @param entity
@@ -76,7 +86,8 @@ public class ReceptionistController {
 	@RequestMapping(value = "/list/{entity}/{page}")
 	public ModelAndView getList(@PathVariable String entity, @PathVariable String page,
 			@RequestParam(value = "q", required = false) String q) {
-		printPath();
+		System.out.println("========>/receptionist/list/{entity="+entity+"}/{page="+page+"}");
+		
 		int pageno = 1;
 		if (!"query".equalsIgnoreCase(page)) {
 			pageno = Integer.parseInt(page);
@@ -84,40 +95,58 @@ public class ReceptionistController {
 		ModelAndView mv;
 		Class clazz;
 		List list = null;
+		int totalpages=1;
+		List<Integer> pageNumbers=null;
 		if (EntitiesConstants.DOCTOR.equalsIgnoreCase(entity)) {
+			
 			mv = new ModelAndView("receptionist/DoctorTable");
 			if ("query".equalsIgnoreCase(page)) {
 				list = doctorservices.searchDoctor(q);
 			} else {
-				mv.addObject("pages", PaginationDTO.getInstance(pageno, EntitiesConstants.DOCTOR));
-				list = doctorservices.getDoctorList(pageno);
+				Page<DoctorBEAN> doctors=doctorservices.getDoctorList(PageRequest.of(pageno-1, PAGE_SIZE));
+				list=doctors.getContent();
+				totalpages=doctors.getTotalPages();	
+				pageNumbers=IntStream.rangeClosed(1,totalpages).boxed().collect(Collectors.toList());				
+				
 			}
 		} else if (EntitiesConstants.STAFF.equalsIgnoreCase(entity)) {
 			mv = new ModelAndView("receptionist/StaffTable");
 			if ("query".equalsIgnoreCase(page)) {
 				list = staffservices.searchStaff(q);
 			} else {
-				mv.addObject("pages", PaginationDTO.getInstance(pageno, EntitiesConstants.STAFF));
-				list = staffservices.getStaffList(pageno);
+				Page<StaffBEAN> staffs=staffservices.getStaffList(PageRequest.of(pageno-1, PAGE_SIZE));				
+				list = staffs.getContent();
+				totalpages=staffs.getTotalPages();
+				pageNumbers=IntStream.rangeClosed(1,totalpages).boxed().collect(Collectors.toList());				
+				
 			}
 		} else if (EntitiesConstants.ROOM.equalsIgnoreCase(entity)) {
 			mv = new ModelAndView("receptionist/RoomList");
 			if ("query".equalsIgnoreCase(page)) {
 				list = roomservices.searchRooms(q);
+				pageNumbers=IntStream.rangeClosed(1,totalpages).boxed().collect(Collectors.toList());								
 			} else {
-				mv.addObject("pages", PaginationDTO.getInstance(pageno, EntitiesConstants.ROOM));
-				list = roomservices.getRoomList(pageno);
+				Object[] arr=roomservices.getRoomList(PageRequest.of(pageno-1, PAGE_SIZE));
+				Page<RoomBEAN> rooms=(Page)arr[0];
+				list = (List)arr[1];
+				totalpages=rooms.getTotalPages();
+				pageNumbers=IntStream.rangeClosed(1,totalpages).boxed().collect(Collectors.toList());								
 			}
 		} else {
 			mv = new ModelAndView("receptionist/PatientTable");
 			if ("query".equalsIgnoreCase(page)) {
-				list = patientservice.serchPatient(q);
+				list = patientservice.serchPatient(q,PageRequest.of(pageno-1, PATIENT_PAGE_SIZE));
 			} else {
-				mv.addObject("pages", PaginationDTO.getInstance(pageno, EntitiesConstants.PATIENT));
-				list = patientservice.getPatientList(pageno);
+				Page<PatientBEAN> patients=patientservice.getPatientList(PageRequest.of(pageno-1, PATIENT_PAGE_SIZE));
+				list=patients.getContent();
+				totalpages=patients.getTotalPages();
+				pageNumbers=generalservices.getListForPageBar(pageno, totalpages,MAX_PAGEBAR);
 			}
 		}
 		mv.addObject("entitylist", list);
+		mv.addObject("pages",pageNumbers);
+		mv.addObject("currentPage",pageno);
+		mv.addObject("totalpages",totalpages);
 		return mv;
 	}
 
@@ -172,17 +201,18 @@ public class ReceptionistController {
 	 */
 	@RequestMapping(value = "registerpatient/{key}", method = RequestMethod.GET)
 	public String viewRegistration(Map<String, Object> model, @PathVariable String key) {
+
 		HmsUserBEAN userForm = new HmsUserBEAN();
 		if (key.equalsIgnoreCase("new")) {
 			userForm.setUserId(IDGenerator.getInstance().getNextId("P"));
 		} else {
-			PatientBEAN entity = (PatientBEAN) generalservices.getEntity(PatientBEAN.class, key);
+			PatientBEAN entity = (PatientBEAN) generalservices.getEntity(PatientBEAN.class, key);			
 			userForm.copy(entity);
 		}
-		model.put("userForm", userForm);
-		model.put("imgpath",context.getRealPath("")
-				+EntitiesConstants.UPLOAD_DIRECTORY
-				+File.separator+EntitiesConstants.DEFAULT_IMAGE);
+		userForm.setImgurl(generalservices.getValidFilename(userForm.getImgurl()));
+		System.out.println(userForm);
+		model.put("entity", userForm);
+	
 		return "receptionist/AddUpdatePatientInfo";
 	}
 
@@ -197,9 +227,7 @@ public class ReceptionistController {
 	public String processRegistration(@RequestParam Map<String, Object> model,
 			@RequestParam(value = "file", required = false) MultipartFile file) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		String fnm=generalservices.uploadFile(context.getRealPath("")
-				+File.separator+EntitiesConstants.UPLOAD_DIRECTORY
-				,(String) model.get("userId"), file);
+		String fnm=generalservices.uploadFile((String) model.get("userId"), file);
 		PatientBEAN patient = new PatientBEAN(new HashSet<>(), new LinkedList<>(), (String) model.get("userId"),
 				(String) model.get("name"),fnm ,
 				(String) model.get("phoneno"), EntitiesConstants.PATIENT, (String) model.get("address"),
@@ -233,21 +261,6 @@ public class ReceptionistController {
 		generalservices.delete(generalservices.getEntity(RoomEntryBEAN.class, entryid));
 
 		return "redirect:/receptionist/info/patient/" + pid;
-	}
+	}	
 
-	void printPath() {
-//		System.out.println(context.getContextPath());
-		System.out.println(context.getRealPath("/"));//very dangerous
-//		System.out.println(System.getProperty("catalina.home"));
-//		File uploadDir = new File("/resources/images");
-//		if(!uploadDir.exists()) {
-//			uploadDir.mkdirs();
-//		}
-		
-//		try {
-//			uploadFile.createNewFile();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-	}
 }
