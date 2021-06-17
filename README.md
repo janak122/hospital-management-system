@@ -1,4 +1,3 @@
 # hospital-management-system
 
-
-- sorry! but video will be uploaded before **18 / 6 / 2021**
+- link : https://drive.google.com/file/d/1x7OirABPndgmGE79FuS71KjL9WzcydsM/view?usp=sharing
